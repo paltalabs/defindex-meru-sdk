@@ -53,7 +53,8 @@ void main() {
   Future<String?> deposit() async {
     DefiIndex defiIndex = DefiIndex(
         sorobanRPCUrl: "https://soroban-testnet.stellar.org",
-        network: SorobanNetwork.TESTNET);
+        network: SorobanNetwork.TESTNET,
+        contractId: "CBWJQE6F7YF2IPDE645A3PW4WNP5KGODDMZSDVGZOGTEP423YLW2L7J5");
 
     String? hash =
         await defiIndex.deposit(aliceId, 10000, (String transactionStr) async {

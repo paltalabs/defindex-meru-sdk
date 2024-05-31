@@ -23,6 +23,7 @@ void main() async {
   var defiIndex = DefiIndex(
     sorobanRPCUrl: 'your_rpc_url',
     network: SorobanNetwork.TESTNET,
+    contractId: 'contract_id'
   );
 
   String? transactionHash = await defiIndex.deposit(

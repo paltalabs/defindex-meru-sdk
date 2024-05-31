@@ -2,7 +2,6 @@ library defindex;
 
 import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
 import 'package:defindex/custom_soroban_server.dart';
-import 'package:defindex/contants.dart';
 
 enum SorobanNetwork {
   PUBLIC,
@@ -14,10 +13,12 @@ class DefiIndex {
   late CustomSorobanServer sorobanServer;
   late final StellarSDK sdk;
   late final SorobanNetwork network;
+  late String contractId;
 
   DefiIndex({
     required this.sorobanRPCUrl,
     this.network = SorobanNetwork.TESTNET,
+    required this.contractId,
   }) {
     sorobanServer = CustomSorobanServer(sorobanRPCUrl);
     sdk = network == SorobanNetwork.TESTNET
@@ -69,10 +70,6 @@ class DefiIndex {
           XdrInt128Parts(XdrInt64(0), XdrUint64(transformedValue)));
 
       XdrSCVal arg2 = XdrSCVal.forAddress(XdrSCAddress.forAccountId(accountId));
-
-      String contractId = network == SorobanNetwork.PUBLIC
-          ? DEFINDEX_CONTRACT_ID_MAINNET
-          : DEFINDEX_CONTRACT_ID_TESTNET;
 
       // Prepare the "invoke" operation
       InvokeContractHostFunction hostFunction = InvokeContractHostFunction(
@@ -137,10 +134,6 @@ class DefiIndex {
 
       XdrSCVal arg1 = XdrSCVal.forAddress(XdrSCAddress.forAccountId(accountId));
 
-      String contractId = network == SorobanNetwork.PUBLIC
-          ? DEFINDEX_CONTRACT_ID_MAINNET
-          : DEFINDEX_CONTRACT_ID_TESTNET;
-
       // Prepare the "invoke" operation
       InvokeContractHostFunction hostFunction = InvokeContractHostFunction(
           contractId, functionName,
@@ -197,10 +190,6 @@ class DefiIndex {
       String functionName = "balance";
 
       XdrSCVal arg1 = XdrSCVal.forAddress(XdrSCAddress.forAccountId(accountId));
-
-      String contractId = network == SorobanNetwork.PUBLIC
-          ? DEFINDEX_CONTRACT_ID_MAINNET
-          : DEFINDEX_CONTRACT_ID_TESTNET;
 
       // Prepare the "invoke" operation
       InvokeContractHostFunction hostFunction = InvokeContractHostFunction(
