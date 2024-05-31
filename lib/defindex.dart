@@ -178,8 +178,7 @@ class DefiIndex {
     return null;
   }
 
-  Future<double?> totalBalance(
-      String accountId, Future<String> Function(String) signer) async {
+  Future<double?> totalBalance(String accountId) async {
     sorobanServer.enableLogging = true;
 
     GetHealthResponse healthResponse = await sorobanServer.getHealth();
@@ -207,41 +206,23 @@ class DefiIndex {
       SimulateTransactionResponse simulateResponse =
           await sorobanServer.simulateTransaction(request);
 
-      transaction.sorobanTransactionData = simulateResponse.transactionData;
-      transaction.addResourceFee(simulateResponse.minResourceFee!);
-      transaction.setSorobanAuth(simulateResponse.sorobanAuth);
+      double balance = 0;
 
-      String transactionString =
-          transaction.toEnvelopeXdr().toEnvelopeXdrBase64();
+      simulateResponse.results!.forEach((element) {
+        XdrSCVal resVal = element.resultValue!;
 
-      String transactionSigned = await signer(transactionString);
+        List<XdrSCVal>? vec = resVal.vec;
 
-      SendTransactionResponse sendResponse =
-          await sorobanServer.sendRawTransaction(transactionSigned);
-
-      assert(!sendResponse.isErrorResponse);
-
-      assert(sendResponse.status != SendTransactionResponse.STATUS_ERROR);
-
-      GetTransactionResponse transactionResponse =
-          await pollStatus(sendResponse.hash!);
-
-      String status = transactionResponse.status!;
-      assert(status == GetTransactionResponse.STATUS_SUCCESS);
-
-      XdrSCVal resVal = transactionResponse.getResultValue()!;
-
-      List<XdrSCVal>? vec = resVal.vec;
-
-      if (vec != null) {
-        if (vec[0].i128?.lo.uint64 != null) {
-          return (vec[0].i128?.lo.uint64 ?? 0) / 10000000;
+        if (vec != null) {
+          if (vec[0].i128?.lo.uint64 != null) {
+            balance = balance + (vec[0].i128?.lo.uint64 ?? 0) / 10000000;
+          }
         }
-      }
+      });
 
-      return 0;
+      return balance;
     }
 
-    return null;
+    return 0;
   }
 }
