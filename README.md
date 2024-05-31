@@ -1,39 +1,36 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Defindex Smart Contract Interaction Package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package provides a Dart interface to interact with the Defindex Smart Contract on the Soroban network. It simplifies the process of sending transactions and querying contract state, making it easier for developers to integrate Defindex into their Dart or Flutter applications.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Easy interaction with the Defindex Smart Contract
+- Supports both testnet and mainnet
+- Provides a high-level API for sending transactions and querying contract state
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add `defindex` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages).
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Here's a simple example of how to use the `DefiIndex` class to deposit an amount into an account:
 
 ```dart
-const like = 'sample';
+import 'package:defindex/defindex.dart';
+
+void main() async {
+  var defiIndex = DefiIndex(
+    sorobanRPCUrl: 'your_rpc_url',
+    network: SorobanNetwork.TESTNET,
+  );
+
+  String? transactionHash = await defiIndex.deposit(
+    'your_account_id',
+    100.0,
+    (transaction) async => 'your_signed_transaction',
+  );
+
+  print('Transaction hash: $transactionHash');
+}
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
